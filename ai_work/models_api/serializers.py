@@ -1,15 +1,15 @@
 from rest_framework import serializers
-from .models import ModelAuthor, AIModel, ModelPurchase, UsageScenario, ModelBenchmark
+from .models import ModalAuthor, AIModel, ModelPurchase, UsageScenario, ModelBenchmark
 
 class ModelAuthorSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ModelAuthor
+        model = ModalAuthor
         fields = ['id', 'name', 'bio', 'contact_info', 'rating']
 
 class AIModelSerializer(serializers.ModelSerializer):
     author = ModelAuthorSerializer(read_only=True)
     author_id = serializers.PrimaryKeyRelatedField(
-        queryset=ModelAuthor.objects.all(), source='author', write_only=True
+        queryset=ModalAuthor.objects.all(), source='author', write_only=True
     )
 
     class Meta:

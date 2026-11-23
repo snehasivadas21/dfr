@@ -1,13 +1,15 @@
 from django.shortcuts import render
-from rest_framework import viewsets
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.filters import SearchFilter, OrderingFilter
+from django_filters.rest_framework import DjangoFilterBackend
 from .models import ModalAuthor, AIModel, ModelPurchase, UsageScenario , ModelBenchmark
 from .serializers import (ModelAuthorSerializer, AIModelSerializer, ModelPurchaseSerializer,UsageScenarioSerializer, ModelBenchmarkSerializer)
 
 
 # Create your views here.
-class ModelAuthorViewSet(viewsets.ModelViewSet):
+class ModelAuthorViewSet(ModelViewSet):
     queryset = ModalAuthor.objects.all()
     serializer_class = ModelAuthorSerializer
 
@@ -18,7 +20,13 @@ class ModelAuthorViewSet(viewsets.ModelViewSet):
         serializer = AIModelSerializer(models, many=True)
         return Response(serializer.data)
 
-class AIModelViewSet(viewsets.ModelViewSet):
+    filter_backends = [DjangoFilterBackend,SearchFilter,OrderingFilter]
+
+    # filterset_fields = ['name']
+    search_fields = ['name','contact_info']
+    ordering_fields = ['rating']
+
+class AIModelViewSet(ModelViewSet):
     queryset = AIModel.objects.all()
     serializer_class = AIModelSerializer
 
@@ -36,15 +44,15 @@ class AIModelViewSet(viewsets.ModelViewSet):
         serializer = ModelBenchmarkSerializer(benchmarks,many=True)
         return Response(serializer.data)
 
-class ModelPurchaseViewSet(viewsets.ModelViewSet):
+class ModelPurchaseViewSet(ModelViewSet):
     queryset = ModelPurchase.objects.all()
     serializer_class = ModelPurchaseSerializer
 
-class UsageScenarioViewSet(viewsets.ModelViewSet):
+class UsageScenarioViewSet(ModelViewSet):
     queryset = UsageScenario.objects.all()
     serializer_class = UsageScenarioSerializer
 
-class ModelBenchmarkViewSet(viewsets.ModelViewSet):
+class ModelBenchmarkViewSet(ModelViewSet):
     queryset = ModelBenchmark.objects.all()
     serializer_class = ModelBenchmarkSerializer
     
